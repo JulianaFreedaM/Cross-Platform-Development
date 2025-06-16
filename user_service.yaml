@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  version: 1.0.0
+  description: API for user registration, login, and password management
+servers:
+  - url: http://localhost:8080
+paths:
+  /user/register:
+    post:
+      summary: Register a new user
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User saved successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid input
+
+  /user/login:
+    post:
+      summary: Login a user
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User login successful
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Authentication failed
+
+  /user/changePassword:
+    post:
+      summary: Change a user's password
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: oldPassword
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: newPassword
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid old password or username

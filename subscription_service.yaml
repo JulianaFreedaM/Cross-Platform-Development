@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: Subscription Service API
+  version: 1.0.0
+  description: API for managing user subscriptions and OTT video subscriptions
+servers:
+  - url: http://localhost:8080
+paths:
+  /subscription:
+    post:
+      summary: Save a new subscription
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: subscribedDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: subscriptionType
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription saved successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /subscription/{username}:
+    get:
+      summary: Get subscription details for a user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '404':
+          description: Subscription not found
+
+  /subscription/all:
+    get:
+      summary: Get all subscriptions
+      responses:
+        '200':
+          description: List of subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+
+  /subscription/ott:
+    post:
+      summary: Save OTT video subscription
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: videoname
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OTT Video Subscription saved successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /subscription/ott/{username}/{videoname}:
+    get:
+      summary: Check if user is subscribed to a specific OTT video
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: videoname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription status
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /subscription/ott/{username}:
+    get:
+      summary: Get all OTT video subscriptions for a user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of OTT video names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        username:
+          type: string
+        subscribedDate:
+          type: string
+          format: date
+        subscriptionType:
+          type: string

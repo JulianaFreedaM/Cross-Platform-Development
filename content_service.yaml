@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: Video Sharing API
+  version: 1.0.0
+  description: API for uploading, retrieving, and listing videos
+servers:
+  - url: http://localhost:8080
+paths:
+  /video:
+    post:
+      summary: Upload a new video
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - name
+              properties:
+                file:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Video saved successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /video/{name}:
+    get:
+      summary: Get a video by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Binary video stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Video not found
+
+  /video/{name}/{platform}:
+    get:
+      summary: Get a video by name and platform
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: platform
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Binary video stream for specific platform
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Video not found
+
+  /video/all:
+    get:
+      summary: Get all video details
+      responses:
+        '200':
+          description: List of video metadata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoDto'
+
+  /video/all/{platform}:
+    get:
+      summary: Get all video details from a specific platform
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of video metadata for platform
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoDto'
+
+components:
+  schemas:
+    VideoDto:
+      type: object
+      properties:
+        name:
+          type: string
+        platform:
+          type: string
+        size:
+          type: integer
+          format: int64
+        contentType:
+          type: string
+        uploadDate:
+          type: string
+          format: date-time
